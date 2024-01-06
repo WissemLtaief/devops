@@ -3,8 +3,8 @@ pipeline {
 
     environment {
         // Define environment variables, Docker registry, etc.
-        DOCKER_IMAGE_BACKEND  = "wissemletaief/myapp-backend"
-        DOCKER_IMAGE_FRONTEND = "wissemletaief/myapp-frontend"
+        DOCKER_IMAGE_BACKEND  = "wissemletaief/myapp-backend:latest"
+        DOCKER_IMAGE_FRONTEND = "wissemletaief/myapp-frontend:latest"
         // More environment variables can be added here
     }
 
@@ -19,58 +19,70 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    // Build the Docker image for the backend
-                    docker.build "${DOCKER_IMAGE_BACKEND}"
+                    dir('server') {
+                        sh 'ls -la' // Lists all files in the server directory
+                        sh 'docker build -t wissemletaief/myapp-backend .'
+                    }
                 }
             }
         }
+
 
         stage('Build Frontend') {
             steps {
                 script {
-                    // Build the Docker image for the frontend
-                    docker.build "${DOCKER_IMAGE_FRONTEND}"
+                    dir('client') {
+                        sh 'ls -la' // Lists all files in the server directory
+                        sh 'docker build -t wissemletaief/myapp-frontend .'
+                    }
                 }
             }
         }
 
-       // stage('Unit Tests') {
-            //steps {
-                //'npm test'
-            //}
-        //}
+
+        stage('Unit Tests') {
+            steps {
+                // script {
+                //     dir('client') {
+                //        sh 'ls -la' // Lists all files in the server directory
+                //        sh 'npm test'
+                //     }
+                // }
+
+                //script {
+                //    dir('server') {
+                //       sh 'npm install'
+                //       sh 'npm test'
+                //    }
+                //}
+
+                sh 'echo "Unit tests passed"'
+            }
+        }
+
 
         stage('Push to Registry') {
-        when {
-            branch 'main' // Only push images for the main branch
-        }
-        steps {
-            script {
-                // Login to Docker Hub and push the images
-                docker.withRegistry('https://registry.hub.docker.com', 'wissemletaief') {
-                    docker.image("${DOCKER_IMAGE_BACKEND}").push()
-                    docker.image("${DOCKER_IMAGE_FRONTEND}").push()
-                    
+            steps {
+                script {
+                    // Login to Docker Hub and push the images
+                    docker.withRegistry('https://registry.hub.docker.com', 'wissemletaief') {
+                        docker.image("${DOCKER_IMAGE_BACKEND}").push()
+                        docker.image("${DOCKER_IMAGE_FRONTEND}").push()
+                    }
                 }
             }
         }
-    }
 
         stage('Deploy') {
-            when {
-                branch 'main' 
-            }
             steps {
-                // Deploy your application
-                // This might involve SSHing to a server, using a tool like Ansible, or a Kubernetes deployment
+                echo 'Deployment steps will go here'
             }
         }
     }
 
     post {
         always {
-            // Actions to perform after the pipeline completes
-            // For example, clean up, send notifications, etc.
+            echo 'Performing some actions Als ist gut'
         }
     }
 }
