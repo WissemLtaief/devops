@@ -77,10 +77,10 @@ pipeline {
                 steps {
                     script {
                             // Apply the Kubernetes manifests for frontend and backend
-                            sh 'kubectl apply -f client/k8s/backend-deployment.yaml'
-                            sh 'kubectl apply -f client/k8s/backend-service.yaml'
-                            sh 'kubectl apply -f server/k8s/frontend-deployment.yaml'
-                            sh 'kubectl apply -f server/k8s/frontend-service.yaml'
+                            sh 'kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7'
+                            sh 'kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7'
+                            sh 'kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-deployment.yaml --v=7'
+                            sh 'kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-service.yaml --v=7'
                     }
                 }
         }
