@@ -78,7 +78,7 @@ pipeline {
                     withCredentials([file(credentialsId: 'k8s', variable: 'K8S_CREDENTIALS_FILE')]) {
                         // Use the credentials file with kubectl without exposing it
                         sh "kubectl config set-credentials minikube --client-certificate=\$K8S_CREDENTIALS_FILE --client-key=\$K8S_CREDENTIALS_FILE"
-                        sh "kubectl config set-context --current --user=minikube"
+                        sh "kubectl config set-context --current --user=wissem"
                         sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7"
                         sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7"
                         sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-deployment.yaml --v=7"
