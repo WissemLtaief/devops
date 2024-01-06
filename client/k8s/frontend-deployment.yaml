@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+      annotations:
+        prometheus.io/scrape: 'true'
+        prometheus.io/port: '8081'
+    spec:
+      containers:
+      - name: frontend-deployment
+        image: wissemletaief/myapp-frontend:latest
+        ports:
+        - containerPort: 80

@@ -73,10 +73,16 @@ pipeline {
             }
         }
 
-        stage('Deploy') {
-            steps {
-                echo 'Deployment steps will go here'
-            }
+        stage('Deploy to Kubernetes') {
+                steps {
+                    script {
+                            // Apply the Kubernetes manifests for frontend and backend
+                            sh 'kubectl apply -f client/k8s/backend-deployment.yaml'
+                            sh 'kubectl apply -f client/k8s/backend-service.yaml'
+                            sh 'kubectl apply -f server/k8s/frontend-deployment.yaml'
+                            sh 'kubectl apply -f server/k8s/frontend-service.yaml'
+                    }
+                }
         }
     }
 
