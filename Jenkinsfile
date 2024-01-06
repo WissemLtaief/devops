@@ -71,27 +71,25 @@ pipeline {
             }
         }
 
-               stages {
-                stage('Deploy to Kubernetes') {
-                    steps {
-                        script {
-                            // Use withCredentials to bind file credentials
-                            withCredentials([file(credentialsId: 'k8s', variable: 'K8S_CREDENTIALS_FILE')]) {
-                                // K8S_CREDENTIALS_FILE will contain the path to the file with the credentials
-                                echo "Credentials file path: ${env.K8S_CREDENTIALS_FILE}"
+        stage('Deploy to Kubernetes') {
+            steps {
+                script {
+                    // Use withCredentials to bind file credentials
+                    withCredentials([file(credentialsId: 'k8s', variable: 'K8S_CREDENTIALS_FILE')]) {
+                        // K8S_CREDENTIALS_FILE will contain the path to the file with the credentials
+                        echo "Credentials file path: ${env.K8S_CREDENTIALS_FILE}"
 
-                                // Use the credentials file with kubectl
-                                sh "kubectl config set-credentials minikube --client-certificate=${env.K8S_CREDENTIALS_FILE} --client-key=${env.K8S_CREDENTIALS_FILE}"
-                                sh "kubectl config set-context --current --user=wissem"
-                                sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7"
-                                sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7"
-                                sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-deployment.yaml --v=7"
-                                sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-service.yaml --v=7"
-                            }
-                        }
+                        // Use the credentials file with kubectl
+                        sh "kubectl config set-credentials minikube --client-certificate=${env.K8S_CREDENTIALS_FILE} --client-key=${env.K8S_CREDENTIALS_FILE}"
+                        sh "kubectl config set-context --current --user=minikube"
+                        sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7"
+                        sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7"
+                        sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-deployment.yaml --v=7"
+                        sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-service.yaml --v=7"
                     }
                 }
             }
+        }     
     }
 
     post {
