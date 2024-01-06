@@ -84,13 +84,13 @@ pipeline {
                         sh "ls -ld /home/devops/"
                         echo "Listing permissions for the credentials file:"
                         sh "ls -l /home/devops/k8s-credentials.crt-key"
-                        echo "Writing K8S_CREDENTIALS to file"
-                        writeFile file: tempCredentialsFile, text: K8S_CREDENTIALS
+                        echo "Writing k8s to file"
+                        writeFile file: tempCredentialsFile, text: k8s
                         // Do NOT use the following line in production, it is insecure
                         // Remove or comment out after debugging
                         // echo "Contents of the credentials file:"
                         // sh "cat /home/devops/k8s-credentials.crt-key"
-                        withKubeConfig(credentialsId: 'K8S_CREDENTIALS') {
+                        withKubeConfig(credentialsId: 'k8s') {
                             sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7"
                             sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7"
                             sh "kubectl apply -f /home/devops/Desktop/miniProject-main/client/k8s/frontend-deployment.yaml --v=7"
