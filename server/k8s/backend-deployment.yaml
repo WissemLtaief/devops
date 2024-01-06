@@ -20,5 +20,5 @@ spec:
       - name: backend-deployment
         image: wissemletaief/myapp-backend:latest
         ports:
-        - containerPort: 5000
+        - containerPort: 3001
        
