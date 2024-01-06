@@ -75,7 +75,9 @@ pipeline {
                 steps {
                     script {
                         def tempCredentialsFile = '/home/devops/k8s-credentials.crt-key'
-                        echo "Current directory: $(pwd)"
+                        // Use sh step to execute the pwd command and return its output
+                        def currentDirectory = sh(script: 'pwd', returnStdout: true).trim()
+                        echo "Current directory: ${currentDirectory}"
                         echo "Listing contents of current directory:"
                         sh "ls -lah"
                         echo "Listing permissions for the parent directory:"
@@ -84,8 +86,10 @@ pipeline {
                         sh "ls -l /home/devops/k8s-credentials.crt-key"
                         echo "Writing K8S_CREDENTIALS to file"
                         writeFile file: tempCredentialsFile, text: K8S_CREDENTIALS
-                        echo "Contents of the credentials file:"
-                        sh "cat /home/devops/k8s-credentials.crt-key"
+                        // Do NOT use the following line in production, it is insecure
+                        // Remove or comment out after debugging
+                        // echo "Contents of the credentials file:"
+                        // sh "cat /home/devops/k8s-credentials.crt-key"
                         withKubeConfig(credentialsId: 'K8S_CREDENTIALS') {
                             sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-deployment.yaml --v=7"
                             sh "kubectl apply -f /home/devops/Desktop/miniProject-main/server/k8s/backend-service.yaml --v=7"
@@ -94,7 +98,7 @@ pipeline {
                         }
                     }
                 }
-}
+            }
     }
 
     post {
